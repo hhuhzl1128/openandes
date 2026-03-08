@@ -2,6 +2,8 @@
 
 OpenAndes is a chat-driven workflow for high-intensity power-system simulation using OpenClaw + ANDES.
 
+Recommended model: Codex 5.3 or above.
+
 ## Repository Structure
 - `andesnotes/`: learning outputs and distilled notes (English-only)
 - `simulations/sigle_tests/`: archived single-test simulation assets and results
