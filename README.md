@@ -5,7 +5,7 @@ OpenAndes is a chat-driven workflow for high-intensity power-system simulation u
 Recommended model: Codex 5.3 or above.
 
 ## Repository Structure
-- `andesnotes/`: learning outputs and distilled notes (English-only)
+- `andesnotes/`: learning outputs and distilled notes 
 - `simulations/sigle_tests/`: archived single-test simulation assets and results
 - `repos/`: external upstream links and submodule pointers
 
