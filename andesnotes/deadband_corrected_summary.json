@@ -1,0 +1,86 @@
+[
+  {
+    "tag": "S1",
+    "tg_db_pu": 0.0003333333333333333,
+    "tg_db_hz": 0.02,
+    "wt_fdbd": -0.015,
+    "pv_fdbd": -0.015,
+    "esd_fdbd": -0.03,
+    "ddn_wt": 0.3,
+    "ddn_pv": 0.3,
+    "ddn_esd": 1.0,
+    "counts": {
+      "TGOV1NDB": 25,
+      "WT": 12,
+      "PV": 10,
+      "ESD_sheet": 2
+    },
+    "esd_model_missing": true,
+    "f_min": 59.75770631118016,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  },
+  {
+    "tag": "S2",
+    "tg_db_pu": 0.00055,
+    "tg_db_hz": 0.033,
+    "wt_fdbd": -0.0236,
+    "pv_fdbd": -0.0236,
+    "esd_fdbd": -0.042,
+    "ddn_wt": 0.3,
+    "ddn_pv": 0.3,
+    "ddn_esd": 1.0,
+    "counts": {
+      "TGOV1NDB": 25,
+      "WT": 12,
+      "PV": 10,
+      "ESD_sheet": 2
+    },
+    "esd_model_missing": true,
+    "f_min": 59.75770631118016,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  },
+  {
+    "tag": "S3",
+    "tg_db_pu": 0.0006666666666666666,
+    "tg_db_hz": 0.04,
+    "wt_fdbd": -0.03,
+    "pv_fdbd": -0.03,
+    "esd_fdbd": -0.05,
+    "ddn_wt": 0.3,
+    "ddn_pv": 0.3,
+    "ddn_esd": 1.0,
+    "counts": {
+      "TGOV1NDB": 25,
+      "WT": 12,
+      "PV": 10,
+      "ESD_sheet": 2
+    },
+    "esd_model_missing": true,
+    "f_min": 59.75770631118016,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  },
+  {
+    "tag": "S4",
+    "tg_db_pu": 0.0008333333333333334,
+    "tg_db_hz": 0.05,
+    "wt_fdbd": -0.04,
+    "pv_fdbd": -0.04,
+    "esd_fdbd": -0.06,
+    "ddn_wt": 0.3,
+    "ddn_pv": 0.3,
+    "ddn_esd": 1.0,
+    "counts": {
+      "TGOV1NDB": 25,
+      "WT": 12,
+      "PV": 10,
+      "ESD_sheet": 2
+    },
+    "esd_model_missing": true,
+    "f_min": 59.75770631118016,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  }
+]

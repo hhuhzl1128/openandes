@@ -1,0 +1,46 @@
+[
+  {
+    "tag": "S1",
+    "tg_db_hz": 0.02,
+    "wt_fdbd": -0.015,
+    "pv_fdbd": -0.015,
+    "esd_fdbd": -0.03,
+    "f_min": 60.0,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 0.0,
+    "esd_model_missing": true
+  },
+  {
+    "tag": "S2",
+    "tg_db_hz": 0.033,
+    "wt_fdbd": -0.0236,
+    "pv_fdbd": -0.0236,
+    "esd_fdbd": -0.042,
+    "f_min": 60.0,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 0.0,
+    "esd_model_missing": true
+  },
+  {
+    "tag": "S3",
+    "tg_db_hz": 0.04,
+    "wt_fdbd": -0.03,
+    "pv_fdbd": -0.03,
+    "esd_fdbd": -0.05,
+    "f_min": 60.0,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 0.0,
+    "esd_model_missing": true
+  },
+  {
+    "tag": "S4",
+    "tg_db_hz": 0.05,
+    "wt_fdbd": -0.04,
+    "pv_fdbd": -0.04,
+    "esd_fdbd": -0.06,
+    "f_min": 60.0,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 0.0,
+    "esd_model_missing": true
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "scenario": "db_0.0000",
+    "db_abs_pu": 0.0,
+    "f_min_hz": 59.75770631118016,
+    "f_max_hz": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  },
+  {
+    "scenario": "db_0.0005",
+    "db_abs_pu": 0.0005,
+    "f_min_hz": 59.75770631118016,
+    "f_max_hz": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  },
+  {
+    "scenario": "db_0.0010",
+    "db_abs_pu": 0.001,
+    "f_min_hz": 59.75770631118016,
+    "f_max_hz": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  },
+  {
+    "scenario": "db_0.0020",
+    "db_abs_pu": 0.002,
+    "f_min_hz": 59.75770631118016,
+    "f_max_hz": 60.0,
+    "nadir_drop_mHz": 242.29368881984215
+  }
+]

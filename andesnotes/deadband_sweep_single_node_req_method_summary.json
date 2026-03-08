@@ -1,0 +1,46 @@
+[
+  {
+    "tag": "S1",
+    "tg_db_hz": 0.02,
+    "wt_fdbd": -0.015,
+    "pv_fdbd": -0.015,
+    "esd_fdbd": -0.03,
+    "f_min": 59.95441936908667,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 45.58063091332798,
+    "esd_model_missing": true
+  },
+  {
+    "tag": "S2",
+    "tg_db_hz": 0.033,
+    "wt_fdbd": -0.0236,
+    "pv_fdbd": -0.0236,
+    "esd_fdbd": -0.042,
+    "f_min": 59.95304938039521,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 46.950619604793076,
+    "esd_model_missing": true
+  },
+  {
+    "tag": "S3",
+    "tg_db_hz": 0.04,
+    "wt_fdbd": -0.03,
+    "pv_fdbd": -0.03,
+    "esd_fdbd": -0.05,
+    "f_min": 59.95241218806298,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 47.587811937020774,
+    "esd_model_missing": true
+  },
+  {
+    "tag": "S4",
+    "tg_db_hz": 0.05,
+    "wt_fdbd": -0.04,
+    "pv_fdbd": -0.04,
+    "esd_fdbd": -0.06,
+    "f_min": 59.9517256270132,
+    "f_max": 60.0,
+    "nadir_drop_mHz": 48.27437298680337,
+    "esd_model_missing": true
+  }
+]

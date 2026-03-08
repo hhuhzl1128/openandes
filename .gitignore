@@ -1,0 +1,13 @@
+# Python envs
+.venv/
+.venv-*/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local logs / outputs
+*.log
+
+# Keep research artifacts but exclude heavyweight cloned repos
+andesnotes/repos/
