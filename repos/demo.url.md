@@ -1,3 +1,3 @@
-# ANDES demo (official)
+# Demo Official Link
 
-- https://github.com/CURENT/demo
+- Repository: https://github.com/CURENT/demo

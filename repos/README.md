@@ -1,5 +1,7 @@
-# repos (official links)
+# External Repositories
 
-- ANDES folder: https://github.com/CURENT/andes/tree/master/andes
-- ANDES docs: https://docs.andes.app/
-- Demo repo: https://github.com/CURENT/demo
+This folder tracks official upstream references.
+
+- ANDES folder reference: https://github.com/CURENT/andes/tree/master/andes
+- ANDES documentation: https://docs.andes.app/
+- Demo repository: https://github.com/CURENT/demo

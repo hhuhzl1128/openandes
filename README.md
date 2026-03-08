@@ -1,16 +1,17 @@
 # openandes
 
-OpenAndes is a conversational workflow for high-intensity power-system simulation based on OpenClaw + ANDES.
+OpenAndes is a chat-driven workflow for high-intensity power-system simulation using OpenClaw + ANDES.
 
-## Contents
-- `andesnotes/`: 学习成果（阅读笔记、方法总结）
-- `simulations/`: 仿真结果（当前保留 `sigle_tests/`）
-- `repos/README.md`: 官方仓库与官方文档跳转链接（不提交第三方源码）
+## Repository Structure
+- `andesnotes/`: learning outputs and distilled notes (English-only)
+- `simulations/sigle_tests/`: archived single-test simulation assets and results
+- `repos/`: external upstream links and submodule pointers
 
 ## Official References
-- ANDES GitHub: https://github.com/CURENT/andes
-- ANDES Docs: https://docs.andes.app/
-- ANDES Demo: https://github.com/CURENT/demo
+- ANDES repository: https://github.com/CURENT/andes
+- ANDES docs: https://docs.andes.app/
+- Demo repository: https://github.com/CURENT/demo
 
-## Goal
-Enable engineers to run and debug advanced simulation flows through chat-driven agent orchestration, without requiring heavy coding in the loop.
+## Notes
+- Python environments are intentionally excluded from this repository.
+- External repositories are references to official upstream sources.
