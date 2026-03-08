@@ -4,7 +4,7 @@ OpenAndes is a conversational workflow for high-intensity power-system simulatio
 
 ## Contents
 - `andesnotes/`: 学习成果（阅读笔记、方法总结）
-- `simulations/`: 按“每次仿真一个文件夹”组织的实验数据
+- `simulations/`: 仿真结果（当前保留 `sigle_tests/`）
 - `repos/README.md`: 官方仓库与官方文档跳转链接（不提交第三方源码）
 
 ## Official References
