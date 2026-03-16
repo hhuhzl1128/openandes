@@ -14,7 +14,7 @@ It is meant to hold demos, notes, run memory, and reusable workflows built aroun
 
 ### Repository Structure
 - `andesnotes/`: learning outputs, distilled notes, and simulation memory files
-- `demo/deadband/`: repaired and generalized deadband demo workflow
+- `demo/`: reserved for runnable ANDES demo workflows
 
 ### Self-Learning and Evolution
 OpenAndes has a practical self-learning and evolution capability powered by simulation memory files (for example, `andesnotes/12_andes_simulation_memory.md`).
