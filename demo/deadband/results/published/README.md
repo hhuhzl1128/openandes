@@ -11,6 +11,9 @@ Included artifacts:
   a single-dispatch comparison between the current and older AGC defaults
 - `h13d2_release_compare_current_vs_olddefault_agc4_summary.csv`
   summary statistics for that `h13d2` comparison
+- `h5_pair_boundary_checks/`
+  two dispatch-boundary continuity checks for `h5d1 -> h5d2`, including
+  cold-stitched vs memory hot-start and cold-stitched vs continuous 1800 s
 
 The full working study directories used during development are intentionally not
 checked in here.

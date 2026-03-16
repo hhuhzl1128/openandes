@@ -26,6 +26,9 @@ workflow with a cleaner dispatch-to-TDS interface.
 - AGC fixes and tuning:
   governor AGC saturation now preserves the command sign, and the current
   default study point is `agc_interval=4 s`, `KP=0.05`, `KI=0.0625`.
+- Boundary continuity validation:
+  new pairwise replay scripts compare cold-stitched dispatches against a
+  memory hot-start second dispatch and against a true continuous 1800 s run.
 - Standalone repo support:
   scripts now auto-detect a sibling `openandes` workspace, or you can point to
   one explicitly with `OPENANDES_WORKSPACE=/path/to/openandes`.
@@ -159,6 +162,69 @@ the older default (`KP=0.20`, `KI=0.05`) in this repaired setup:
 ![h13d2 Current vs Old Default](results/published/h13d2_release_compare_current_vs_olddefault_agc4.png)
 
 Supporting CSVs are stored in `results/published/`.
+
+### `h5d1 -> h5d2` dispatch-boundary continuity check
+
+After the stable migration and PV-curve repair, one more workflow issue became
+clear: stitching two adjacent dispatches from separate cold starts can still
+inject a non-physical frequency reset at the 15-minute boundary.
+
+To isolate that effect, this repo now includes two additive validation scripts:
+
+- `scripts/compare_dispatch_pair_hotstart.py`
+  reuses the terminal state of the first dispatch and starts the second
+  dispatch from memory instead of from a fresh dynamic initialization.
+- `scripts/run_dispatch_pair_continuous.py`
+  runs the two dispatch intervals as one 1800-second continuous simulation and
+  compares that trace against the cold-stitched baseline.
+
+Using the current default AGC settings (`agc_interval=4 s`, `KP=0.05`,
+`KI=0.0625`, `init_mode=first`), the published `h5d1 -> h5d2` check shows:
+
+- cold-stitched boundary jump: `-0.00620 Hz`
+- memory hot-start boundary jump: `0.00000 Hz`
+- continuous `899 s -> 900 s` step: `-0.01295 Hz`
+
+These results show that the cold-stitched zero reset is a workflow artifact,
+while the continuous run preserves the actual dynamic step between dispatches.
+
+Reproduce the published 5h pair with:
+
+```bash
+python scripts/run_dispatch_tds.py \
+  --hour 5 \
+  --dispatch 1 \
+  --results-dir results/generated/h5_pair \
+  --label h5d1
+
+python scripts/run_dispatch_tds.py \
+  --hour 5 \
+  --dispatch 2 \
+  --results-dir results/generated/h5_pair \
+  --label h5d2
+
+python scripts/compare_dispatch_pair_hotstart.py \
+  --first-dispatch-json results/generated/h5_pair/h5d1_dispatch.json \
+  --second-dispatch-json results/generated/h5_pair/h5d2_dispatch.json \
+  --first-cold-csv results/generated/h5_pair/h5d1_frequency.csv \
+  --second-cold-csv results/generated/h5_pair/h5d2_frequency.csv \
+  --results-dir results/generated/h5_pair \
+  --label h5d1_h5d2_default_statehot
+
+python scripts/run_dispatch_pair_continuous.py \
+  --first-dispatch-json results/generated/h5_pair/h5d1_dispatch.json \
+  --second-dispatch-json results/generated/h5_pair/h5d2_dispatch.json \
+  --first-cold-csv results/generated/h5_pair/h5d1_frequency.csv \
+  --second-cold-csv results/generated/h5_pair/h5d2_frequency.csv \
+  --results-dir results/generated/h5_pair \
+  --label h5d1_h5d2_default_continuous
+```
+
+Published figures:
+
+![h5 hot-start vs cold](results/published/h5_pair_boundary_checks/h5d1_h5d2_default_statehot_hotstart_vs_cold.png)
+
+![h5 continuous vs stitched](results/published/h5_pair_boundary_checks/h5d1_h5d2_default_continuous_vs_stitched.png)
 
 ## Notes
 
