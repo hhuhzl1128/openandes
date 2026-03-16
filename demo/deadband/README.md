@@ -1,12 +1,12 @@
-# deadband2
+# deadband
 
-`deadband2` is an optimized derivative of the original `deadband` demo.
+`deadband` is the repaired and reusable form of the original `deadband` demo.
 It keeps the original Illinois-200 test assets and notebooks, but updates the
 runtime path so the study can be reproduced on the current stable ANDES/AMS
 workflow with a cleaner dispatch-to-TDS interface.
 
 Within `openandes`, this folder is a simulation/demo package under
-`demo/deadband2/`.
+`demo/deadband/`.
 
 ## What Changed
 
@@ -47,7 +47,7 @@ The original demo had a few practical issues when replayed on the stable stack:
 4. The legacy `PVD2` / `ESD2` branch path no longer matched the current stable
    ANDES model set.
 
-`deadband2` fixes those issues directly rather than relying on workaround
+`deadband` fixes those issues directly rather than relying on workaround
 initialization modes.
 
 ## Repository Layout

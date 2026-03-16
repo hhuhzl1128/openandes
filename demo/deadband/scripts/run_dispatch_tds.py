@@ -33,7 +33,7 @@ def find_workspace(root: Path) -> Path | None:
 
     This keeps the demo runnable both inside the historical
     ``openandes/demo/demo/deadband`` layout and from a standalone export such as
-    the ``deadband2`` repository.
+    the ``deadband`` repository.
     """
     candidates: list[Path] = []
 
