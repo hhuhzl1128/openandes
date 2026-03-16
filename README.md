@@ -6,7 +6,7 @@ If you want to work through OpenClaw, see the Orange Book link at the end of thi
 
 ## Vibe Coding with ANDES
 
-Recommended model: Codex 5.3 or above.
+Recommended model: gpt-5.4.
 
 ### Positioning
 This folder is the ANDES-focused theme inside the overall vibe-coding setup.
