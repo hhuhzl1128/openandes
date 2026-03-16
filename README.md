@@ -6,8 +6,7 @@ Recommended model: Codex 5.3 or above.
 
 ## Repository Structure
 - `andesnotes/`: learning outputs, distilled notes, and simulation memory files
-- `simulations/test/`: archived simulation assets, run outputs, figures, and summaries
-- `simulations/deadband2/`: repaired and generalized deadband demo workflow
+- `demo/deadband2/`: repaired and generalized deadband demo workflow
 - `repos/`: external upstream links and submodule pointers
 
 ## Self-Learning and Evolution

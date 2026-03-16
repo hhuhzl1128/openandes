@@ -7,7 +7,7 @@
 1. Use `python -m andes` in a dedicated virtual environment.
 2. Run `pflow` before `tds` (or `-r pflow tds` in one command).
 3. For multi-scenario studies (S1–S4 etc.), always isolate outputs by run folder.
-4. Keep perturbation logic in standalone script files under `simulations/<run>/scripts/`.
+4. Keep perturbation logic in standalone script files under `demo/<run>/scripts/`.
 5. Generate plots from saved outputs (`.lst` + `.npz`) after all runs finish.
 
 ## 2) Important Command Notes
@@ -34,12 +34,14 @@
 - A previous false conclusion was caused by reading stale files with same output names.
 - Mandatory fix: each run must write to dedicated `-o run_dir`.
 
-## 4) Current Reproducible Test Pattern (IL200)
+## 4) Archived Test Pattern (IL200)
 
 - System: Illinois 200-bus dynamic cases (four settings S1–S4)
 - Simulation horizon: 50 s
 - Disturbance: permanent load increase at 5 s
 - Output: frequency comparison curve + JSON summary
+- Status: the `demo/test/` workflow was removed from the repository during the
+  March 16, 2026 demo cleanup, so keep this section only as historical memory.
 
 ## 5) Debug Checklist (Order Matters)
 
@@ -99,7 +101,7 @@ Maintenance rules:
 - Fix applied:
   - Switched to `Req/Xeq` step-change style perturbation at 5 s.
 - Repro command(s):
-  - see `simulations/test/README.md`
+  - historical workflow details were formerly stored under `demo/test/README.md`
 - Result summary:
   - S1–S4 produced differentiated nadir values and expected ordering.
 - Follow-up action:
