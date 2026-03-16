@@ -4,5 +4,6 @@
 
 Current run folder:
 - `test/`
+- `deadband2/`
 
 Future simulations should be added as new sibling subfolders under `simulations/`.

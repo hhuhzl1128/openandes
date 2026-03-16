@@ -7,6 +7,7 @@ Recommended model: Codex 5.3 or above.
 ## Repository Structure
 - `andesnotes/`: learning outputs, distilled notes, and simulation memory files
 - `simulations/test/`: archived simulation assets, run outputs, figures, and summaries
+- `simulations/deadband2/`: repaired and generalized deadband demo workflow
 - `repos/`: external upstream links and submodule pointers
 
 ## Self-Learning and Evolution
@@ -30,6 +31,7 @@ This enables a mobile-first control loop: request, run, debug, and receive resul
 
 ## Official References
 - ANDES repository: https://github.com/CURENT/andes
+- AMS repository: https://github.com/CURENT/ams
 - ANDES docs: https://docs.andes.app/
 - Demo repository: https://github.com/CURENT/demo
 
