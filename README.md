@@ -7,7 +7,6 @@ Recommended model: Codex 5.3 or above.
 ## Repository Structure
 - `andesnotes/`: learning outputs, distilled notes, and simulation memory files
 - `demo/deadband2/`: repaired and generalized deadband demo workflow
-- `repos/`: external upstream links and submodule pointers
 
 ## Self-Learning and Evolution
 OpenAndes has a practical self-learning and evolution capability powered by simulation memory files (for example, `andesnotes/12_andes_simulation_memory.md`).
@@ -36,7 +35,7 @@ This enables a mobile-first control loop: request, run, debug, and receive resul
 
 ## Notes
 - Python environments are intentionally excluded from this repository.
-- External repositories are references to official upstream sources.
+- Upstream repositories should be obtained directly from their official sources when needed.
 
 If you need to know openclaw from the beginning，check this doc below:
 https://my.feishu.cn/wiki/H27Iw9ussiaYbokymhncExtjnAh?from=from_copylink

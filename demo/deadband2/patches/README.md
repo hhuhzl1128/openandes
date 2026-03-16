@@ -15,6 +15,6 @@ personal fork repositories.
 Apply from an upstream checkout if needed:
 
 ```bash
-git -C repos/andes apply demo/deadband2/patches/andes_deadband2.patch
-git -C repos/ams apply demo/deadband2/patches/ams_runtime_compat.patch
+git -C /path/to/andes apply /path/to/openandes/demo/deadband2/patches/andes_deadband2.patch
+git -C /path/to/ams apply /path/to/openandes/demo/deadband2/patches/ams_runtime_compat.patch
 ```

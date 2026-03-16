@@ -69,7 +69,8 @@ these:
 
 For a clean `openandes` checkout, the recommended setup is:
 
-1. Use the official upstream repositories referenced in `repos/`
+1. Clone the official upstream ANDES and AMS repositories separately, outside
+   this repo
 2. Apply the patches in `patches/` if you need the exact runtime used in this
    repaired study
 
