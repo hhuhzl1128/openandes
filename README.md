@@ -1,14 +1,22 @@
 # openandes
 
-OpenAndes is a chat-driven workflow for high-intensity power-system simulation using OpenClaw + ANDES.
+OpenAndes is an ANDES-themed workspace under a broader vibe-coding workflow.
+Using OpenClaw to run or orchestrate tasks is one option, not the only path.
+If you want to work through OpenClaw, see the Orange Book link at the end of this README.
+
+## Vibe Coding with ANDES
 
 Recommended model: Codex 5.3 or above.
 
-## Repository Structure
+### Positioning
+This folder is the ANDES-focused theme inside the overall vibe-coding setup.
+It is meant to hold demos, notes, run memory, and reusable workflows built around ANDES.
+
+### Repository Structure
 - `andesnotes/`: learning outputs, distilled notes, and simulation memory files
 - `demo/deadband2/`: repaired and generalized deadband demo workflow
 
-## Self-Learning and Evolution
+### Self-Learning and Evolution
 OpenAndes has a practical self-learning and evolution capability powered by simulation memory files (for example, `andesnotes/12_andes_simulation_memory.md`).
 
 As you use the system more and provide corrections, the workflow captures:
@@ -19,23 +27,24 @@ As you use the system more and provide corrections, the workflow captures:
 
 Over time, this makes the simulation process more reliable, more reusable, and progressively more intelligent.
 
-## Remote Simulation from Mobile Chat
-You can trigger remote simulations on your computer directly from chat apps, such as:
+### Optional OpenClaw Runtime
+If you prefer, you can use OpenClaw to trigger remote simulations on your computer from chat apps, such as:
 - Feishu
 - WhatsApp
 - and similar messaging channels supported by your OpenClaw setup.
 
 This enables a mobile-first control loop: request, run, debug, and receive results without logging into the remote machine manually.
 
-## Official References
+### Official References
 - ANDES repository: https://github.com/CURENT/andes
 - AMS repository: https://github.com/CURENT/ams
 - ANDES docs: https://docs.andes.app/
 - Demo repository: https://github.com/CURENT/demo
 
-## Notes
+### Notes
 - Python environments are intentionally excluded from this repository.
 - Upstream repositories should be obtained directly from their official sources when needed.
 
-If you need to know openclaw from the beginning，check this doc below:
+### Orange Book
+If you need to know OpenClaw from the beginning, check the Orange Book:
 https://my.feishu.cn/wiki/H27Iw9ussiaYbokymhncExtjnAh?from=from_copylink
