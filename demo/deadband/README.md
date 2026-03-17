@@ -1,243 +1,247 @@
-# deadband2
+# Deadband Demo Refresh
 
-`deadband2` is an optimized derivative of the original `deadband` demo.
-It keeps the original Illinois-200 test assets and notebooks, but updates the
-runtime path so the study can be reproduced on the current stable ANDES/AMS
-workflow with a cleaner dispatch-to-TDS interface.
+This directory contains a stable-branch refresh of the original deadband demo.
+The goal of the refresh is not to preserve the old notebook layout byte-for-byte,
+but to make the workflow reproducible on current ANDES/AMS code while keeping
+the key frequency-control behaviors visible.
 
-## What Changed
+The scripts here assume an `openandes` workspace where `andes/`, `ams/`, and
+`demo/` are sibling folders. If you export this demo elsewhere, set
+`OPENANDES_WORKSPACE=/path/to/workspace` so the scripts can still locate the
+local source trees.
 
-- Stable-version migration:
-  `PVD2 -> PVD1`, `ESD2 -> ESD1`, and the migrated dynamic sheets are adapted
-  with the extra `fdbdu` column needed by the stable workflow.
-- Renewable classification:
-  wind and PV `PVD1` devices are split by configurable prefixes so the stable
-  model path still tracks the two resource types separately.
-- Dispatch-to-TDS replay:
-  the main script can now either recompute dispatch from OPF or directly replay
-  an existing dispatch JSON.
-- Generalized runner:
-  the workflow is no longer hard-wired to one case; it supports arbitrary
-  `hXdY` dispatch intervals and full-day 96-dispatch batch studies.
-- Initialization cleanup:
-  `init_mode=first` is the default, `second` mode has been removed, and
-  `cases/CurveInterp.csv` has PV clipped to nonnegative values to eliminate the
-  unphysical negative-PV cold-start failures.
-- AGC fixes and tuning:
-  governor AGC saturation now preserves the command sign, and the current
-  default study point is `agc_interval=4 s`, `KP=0.05`, `KI=0.0625`.
-- Boundary continuity validation:
-  new pairwise replay scripts compare cold-stitched dispatches against a
-  memory hot-start second dispatch and against a true continuous 1800 s run.
-- Standalone repo support:
-  scripts now auto-detect a sibling `openandes` workspace, or you can point to
-  one explicitly with `OPENANDES_WORKSPACE=/path/to/openandes`.
+## What was wrong in the original demo
 
-## Why This Fork Exists
+1. The old README required installing a development-only `andes@pvd2` branch
+   because the case still used `PVD2` and `ESD2`.
+2. The old workflow was tightly coupled to a live AMS-to-ANDES handoff, which
+   became brittle once AMS/ANDES 2.0 internals changed.
+3. Each 15-minute dispatch was simulated as a cold start. Adjacent dispatches
+   therefore showed an artificial boundary reset, even when the operating point
+   should have evolved continuously.
+4. After switching initialization from dispatch averages to the first curve
+   sample in the interval, some dispatches failed because `CurveInterp.csv`
+   contained negative PV samples created by interpolation plus noise.
+5. The AGC governor limit path had a sign bug: saturation logic needed to
+   preserve the sign of the requested AGC correction while respecting available
+   upward and downward headroom.
+6. Even after introducing hot starts, directly applying the next dispatch OPF
+   target to governor `pref0` at the interval boundary created a non-physical
+   frequency shock. The OPF output is a coarse 15-minute waypoint, not an
+   instantaneous mechanical-power step command.
 
-The original demo had a few practical issues when replayed on the stable stack:
+## What changed
 
-1. Cold-starting from dispatch-interval OPF averages often created an
-   unrealistic initial frequency offset.
-2. Switching initialization to the first second of the interval made the start
-   point more physical, but exposed negative PV values in `CurveInterp.csv`.
-3. Those negative PV samples were produced near dawn/dusk and at low-PV periods
-   after interpolation plus Gaussian noise, which could trigger TDS init
-   failures.
-4. The legacy `PVD2` / `ESD2` branch path no longer matched the current stable
-   ANDES model set.
-
-`deadband2` fixes those issues directly rather than relying on workaround
-initialization modes.
-
-## Repository Layout
-
-- `cases/`: test cases, dispatch curves, and migrated stable dynamic files
-- `scripts/`: single-dispatch, full-day, sweep, and post-processing runners
-- `notes/`: original notebooks kept for study context
-- `results/published/`: representative published figures from the repaired demo
-
-## Environment
-
-This repository does not vendor ANDES/AMS itself. It expects one of these:
-
-1. A sibling `openandes` workspace that contains `andes/` and `ams/`
-2. `OPENANDES_WORKSPACE` pointing to such a workspace
-3. A Python environment where compatible `andes` and `ams` packages are already
-   importable
-
-Example:
-
-```bash
-export OPENANDES_WORKSPACE=/path/to/openandes
-source /path/to/openandes/.venv-deadband/bin/activate
-```
-
-## Usage
-
-Run a single dispatch by recomputing OPF first:
-
-```bash
-python scripts/run_dispatch_tds.py \
-  --hour 13 \
-  --dispatch 2 \
-  --agc-interval 4 \
-  --kp 0.05 \
-  --ki 0.0625 \
-  --init-mode first
-```
-
-Replay an existing dispatch JSON:
-
-```bash
-python scripts/run_dispatch_tds.py \
-  --dispatch-json path/to/h13d2_dispatch.json \
-  --agc-interval 4 \
-  --kp 0.05 \
-  --ki 0.0625 \
-  --init-mode first
-```
-
-Run the full 96-dispatch daily study:
-
-```bash
-python scripts/run_day_dispatch_tds.py \
-  --agc-interval 4 \
-  --kp 0.05 \
-  --ki 0.0625 \
-  --init-mode first \
-  --retry-init-mode dispatch
-```
-
-Sweep AGC PI gains for one dispatch:
-
-```bash
-python scripts/sweep_dispatch_tds.py \
-  --dispatch-json path/to/h13d2_dispatch.json \
-  --agc-interval 4 \
-  --init-mode first
-```
-
-## Published Results
-
-### Daily 96-dispatch study
-
-Published run:
-
-- 24 hours
-- 4 dispatches per hour
-- 900 s TDS per dispatch
-- `agc_interval = 4 s`
-- `KP = 0.05`
-- `KI = 0.0625`
-- `init_mode = first`
-
-Outcome:
-
-- `96/96` dispatches succeeded
-- `0` retries were needed after PV clipping
-- aggregate `max(|f|) = 0.0417 Hz`
-- aggregate `P95(|f|) = 0.0182 Hz`
-- aggregate `P99(|f|) = 0.0241 Hz`
-
-![Daily Frequency Distribution](results/published/day96_agc4_kp0p05_ki0p0625_first/frequency_distribution.png)
-
-![Daily Frequency Curves by Hour](results/published/day96_agc4_kp0p05_ki0p0625_first/daily_compare_hourly_grid.png)
-
-The 17 dispatches that previously needed fallback now complete under pure
-`first` initialization after repairing the PV curve:
-
-![Former Fallback Dispatches](results/published/day96_agc4_kp0p05_ki0p0625_first/former_fallback_dispatch_curves_grid.png)
-
-### `h13d2` parameter comparison
-
-For `h13d2`, the current default (`KP=0.05`, `KI=0.0625`) performs better than
-the older default (`KP=0.20`, `KI=0.05`) in this repaired setup:
-
-- current default `abs_mean = 0.00737 Hz`
-- old default `abs_mean = 0.00821 Hz`
-- current default `max = 0.0311 Hz`
-- old default `max = 0.0380 Hz`
-
-![h13d2 Current vs Old Default](results/published/h13d2_release_compare_current_vs_olddefault_agc4.png)
-
-Supporting CSVs are stored in `results/published/`.
-
-### `h5d1 -> h5d2` dispatch-boundary continuity check
-
-After the stable migration and PV-curve repair, one more workflow issue became
-clear: stitching two adjacent dispatches from separate cold starts can still
-inject a non-physical frequency reset at the 15-minute boundary.
-
-To isolate that effect, this repo now includes two additive validation scripts:
-
+- `scripts/run_dispatch_tds.py`
+  - accepts either a precomputed `dispatch JSON -> TDS` workflow or a fresh AMS
+    ACOPF recomputation when `--dispatch-json` is omitted;
+  - auto-adapts the legacy dynamic workbook from `PVD2/ESD2` to stable
+    `PVD1/ESD1`, and inserts `fdbdu` so the upper deadband remains explicit on
+    stable ANDES;
+  - defaults to `init_mode=first`, `agc_interval=4`, `kp=0.03`, `ki=0.01`;
+  - fixes AGC governor clipping so positive commands are not incorrectly routed
+    through the negative limit.
+- `scripts/run_day_dispatch_tds.py`
+  - generalizes the demo to arbitrary `hXdY` dispatches and full 96-dispatch
+    daily sweeps;
+  - keeps `init_mode=first` as the default and can retry early failures with a
+    fallback init mode if needed.
+- `scripts/prepare_day_dispatches.py`
+  - precomputes a reusable `dispatch JSON` library so OPF and TDS can be
+    decoupled cleanly.
+- `scripts/hotstart_checkpoint.py`
+  - saves parameter-specific disk checkpoints containing the ANDES snapshot, AGC
+    state, and the runtime context required to resume the next interval.
+- `scripts/run_dispatch_hotstart.py` and `scripts/run_day_dispatch_hotstart.py`
+  - run one interval per process while passing terminal state from one dispatch
+    to the next through disk checkpoints;
+  - apply boundary dispatch targets only to conventional governors;
+  - support `governor_target_schedule=midpoint_trajectory`, which is now the
+    recommended boundary treatment.
 - `scripts/compare_dispatch_pair_hotstart.py`
-  reuses the terminal state of the first dispatch and starts the second
-  dispatch from memory instead of from a fresh dynamic initialization.
+  - compares cold-stitched and hot-started boundary behavior;
+  - now supports smooth governor-target schedules instead of only a boundary
+    hard step.
 - `scripts/run_dispatch_pair_continuous.py`
-  runs the two dispatch intervals as one 1800-second continuous simulation and
-  compares that trace against the cold-stitched baseline.
+  - runs two adjacent dispatches as a single 1800-second simulation and can
+    directly plot the result against the cold-stitched baseline.
+- `scripts/compare_dispatch_pair_midpoint_continuous.py`
+  - validates that midpoint-trajectory hot-start stitching matches the
+    corresponding continuous replay started from the same boundary checkpoint.
+- `cases/CurveInterp.csv`
+  - clips PV samples to non-negative values so `init_mode=first` is physically
+    valid and no longer trips over negative irradiance artifacts.
 
-The published figures in this subsection intentionally use the first
-`h5d1 -> h5d2` continuity experiment, where the AGC was lighter
-(`agc_interval=4 s`, `KP=0.03`, `KI=0.01`, `init_mode=first`) so the boundary
-artifact is easier to see. Under that setup, the published check shows:
+## Stable model migration
 
-- cold-stitched boundary jump: `-0.04010 Hz`
-- memory hot-start boundary jump: `0.00000 Hz`
-- continuous `899 s -> 900 s` step: `-0.01292 Hz`
+The historical deadband case used custom `PVD2` and `ESD2` sheets to work
+around missing stable-branch support.
 
-These results show that the cold-stitched zero reset is a workflow artifact,
-while the continuous run preserves the actual dynamic step between dispatches.
+- `ESD2` is no longer needed here because stable `ESD1` is sufficient for this
+  demo.
+- `PVD2` is migrated to `PVD1` with an explicit `fdbdu` column so the legacy
+  deadband intent remains representable on stable ANDES.
 
-Reproduce the published 5h pair with:
+The source workbook remains `cases/IL200_dyn_db2.xlsx`. A stable-compatible copy
+is generated automatically when the scripts run.
+
+## Recommended boundary treatment
+
+The current recommended workflow is:
+
+1. Compute or reuse quarter-hour dispatch JSON files.
+2. Run TDS one interval at a time with disk checkpoints between intervals.
+3. Apply dispatch targets only to conventional generator governors.
+4. Do **not** hard-switch governor `pref0` to the next interval target at the
+   boundary.
+5. Instead, use a midpoint trajectory for interval `k`:
+   - left boundary: `0.5 * (P_{k-1} + P_k)`
+   - interval midpoint: `P_k`
+   - right boundary: `0.5 * (P_k + P_{k+1})`
+
+This interpretation treats each OPF dispatch as a waypoint inside the 15-minute
+window rather than an instantaneous step at the boundary. It removes the
+artificial frequency dip caused by a direct target jump while preserving
+continuity across separately executed segments.
+
+`PVD1` and `ESD1` are not used as dispatch-target devices at the boundary in the
+current release path. Their behavior continues to come from the replayed curve
+and AGC path; only conventional governors receive the dispatch-target schedule.
+
+## Reproduce the 5h midpoint hot-start validation
+
+Run the commands below from `demo/deadband/`.
 
 ```bash
-python scripts/run_dispatch_tds.py \
-  --hour 5 \
-  --dispatch 1 \
-  --results-dir results/generated/h5_pair \
-  --label h5d1
+python scripts/prepare_day_dispatches.py \
+  --hour-start 5 --hours 1 --workers 1 \
+  --results-dir results/repro_h5_dispatches
 
-python scripts/run_dispatch_tds.py \
-  --hour 5 \
-  --dispatch 2 \
-  --results-dir results/generated/h5_pair \
-  --label h5d2
+python scripts/run_day_dispatch_hotstart.py \
+  --dispatch-dir results/repro_h5_dispatches \
+  --hour-start 5 --hours 1 \
+  --results-dir results/repro_h5_midpoint_segments \
+  --checkpoints-dir results/repro_h5_midpoint_checkpoints \
+  --kp 0.03 --ki 0.01 --agc-interval 4 \
+  --init-mode first \
+  --apply-governor-targets \
+  --governor-target-schedule midpoint_trajectory
 
-python scripts/compare_dispatch_pair_hotstart.py \
-  --first-dispatch-json results/generated/h5_pair/h5d1_dispatch.json \
-  --second-dispatch-json results/generated/h5_pair/h5d2_dispatch.json \
-  --first-cold-csv results/generated/h5_pair/h5d1_frequency.csv \
-  --second-cold-csv results/generated/h5_pair/h5d2_frequency.csv \
-  --kp 0.03 \
-  --ki 0.01 \
-  --results-dir results/generated/h5_pair \
-  --label h5d1_h5d2_kp003_ki001_statehot
-
-python scripts/run_dispatch_pair_continuous.py \
-  --first-dispatch-json results/generated/h5_pair/h5d1_dispatch.json \
-  --second-dispatch-json results/generated/h5_pair/h5d2_dispatch.json \
-  --first-cold-csv results/generated/h5_pair/h5d1_frequency.csv \
-  --second-cold-csv results/generated/h5_pair/h5d2_frequency.csv \
-  --kp 0.03 \
-  --ki 0.01 \
-  --results-dir results/generated/h5_pair \
-  --label h5d1_h5d2_continuous_1800s_kp003_ki001
+python scripts/compare_dispatch_pair_midpoint_continuous.py \
+  --checkpoint-in results/repro_h5_midpoint_checkpoints/<family_hash>/end_h5d0 \
+  --first-dispatch-json results/repro_h5_dispatches/h5d1_dispatch.json \
+  --second-dispatch-json results/repro_h5_dispatches/h5d2_dispatch.json \
+  --third-dispatch-json results/repro_h5_dispatches/h5d3_dispatch.json \
+  --first-hotstart-csv results/repro_h5_midpoint_segments/h5d1_frequency.csv \
+  --second-hotstart-csv results/repro_h5_midpoint_segments/h5d2_frequency.csv \
+  --kp 0.03 --ki 0.01 --agc-interval 4 \
+  --results-dir results/repro_h5_midpoint_compare
 ```
 
-Published figures:
+Notes:
 
-![h5 hot-start vs cold](results/published/h5_pair_boundary_checks/h5d1_h5d2_kp003_ki001_statehot_hotstart_vs_cold.png)
+- `prepare_day_dispatches.py` produces parameter-independent dispatch JSON
+  files. You can reuse them across multiple AGC/deadband experiments without
+  rerunning AMS ACOPF every time.
+- `run_day_dispatch_hotstart.py` prints the resolved checkpoint family
+  directory. Replace `<family_hash>` in the comparison command with the hash
+  printed by that run.
+- The recommended path is now disk hot-start, not the earlier memory-only
+  boundary experiment.
+- The release bundle committed to this repo is intentionally small. For larger
+  sweeps, regenerate locally instead of committing the full `results/` tree.
 
-![h5 continuous vs stitched](results/published/h5_pair_boundary_checks/h5d1_h5d2_continuous_vs_stitched_kp003_ki001.png)
+## Validation figures
 
-## Notes
+The committed release artifacts live in `results/release_h5_pair/`.
 
-- `cases/CurveInterp.csv` in this repo is the repaired version with PV clipped
-  to nonnegative values.
-- This repository is based on the earlier `deadband` demo and is intended as an
-  optimized follow-on branch.
-- The original `deadband` README carried an all-rights-reserved/proprietary
-  notice. Treat this repository as an internal derivative unless upstream
-  licensing is clarified.
+### 1. Historical: cold-stitched vs memory hot-start second dispatch
+
+Committed figure:
+
+![h5 hotstart vs cold](results/release_h5_pair/h5d1_h5d2_default_statehot_hotstart_vs_cold.png)
+
+Key numbers from
+[`results/release_h5_pair/h5d1_h5d2_default_statehot_hotstart_summary.csv`](results/release_h5_pair/h5d1_h5d2_default_statehot_hotstart_summary.csv):
+
+- cold boundary jump: `-0.00620 Hz`
+- hot-start boundary jump: `0.00000 Hz`
+- immediate post-boundary hot-start step: `+0.00534 Hz`
+
+This shows the cold restart discontinuity is numerical workflow error, not a
+physical frequency response. Carrying the terminal dynamic state into the next
+dispatch removes that jump.
+
+### 2. Historical: cold-stitched vs continuous 1800-second run
+
+Committed figure:
+
+![h5 continuous vs stitched](results/release_h5_pair/h5d1_h5d2_default_continuous_vs_stitched.png)
+
+Key numbers from
+[`results/release_h5_pair/h5d1_h5d2_default_continuous_vs_stitched_summary.csv`](results/release_h5_pair/h5d1_h5d2_default_continuous_vs_stitched_summary.csv):
+
+- cold boundary jump: `-0.00620 Hz`
+- continuous `899 s -> 900 s` step: `-0.01295 Hz`
+
+The continuous run does not reset to zero at the dispatch boundary. Instead, it
+shows a genuine dynamic step as the second interval begins, which is the
+behavior the cold-stitched baseline was masking.
+
+### 3. Legacy hard-step target update vs midpoint trajectory
+
+Committed figure:
+
+![h5 midpoint vs legacy](results/release_h5_pair/h5d1_h5d2_midpoint_vs_legacy.png)
+
+Key numbers from
+[`results/release_h5_pair/h5d1_h5d2_midpoint_vs_legacy_summary.csv`](results/release_h5_pair/h5d1_h5d2_midpoint_vs_legacy_summary.csv):
+
+- `hard step` boundary `0 -> 1 s` step: `-0.59136 Hz`
+- `hard step` second-interval minimum: `-4.74445 Hz`
+- `midpoint trajectory` boundary `0 -> 1 s` step: `+0.00560 Hz`
+- `midpoint trajectory` second-interval minimum: `-0.02386 Hz`
+- `midpoint trajectory` second-interval mean absolute deviation: `0.01143 Hz`
+
+This is the key boundary-fix result. The large dip was not caused by hot start
+itself; it came from interpreting the new dispatch target as an instantaneous
+governor step. Replacing that step with a midpoint trajectory restores a
+physically reasonable response.
+
+### 4. Midpoint hot-start stitching vs corresponding continuous replay
+
+Committed figure:
+
+![h5 midpoint hotstart vs continuous](results/release_h5_pair/h5d1_h5d2_midpoint_chain_hotstart_vs_continuous.png)
+
+Key numbers from
+[`results/release_h5_pair/h5d1_h5d2_midpoint_chain_summary.csv`](results/release_h5_pair/h5d1_h5d2_midpoint_chain_summary.csv):
+
+- continuous minimum: `-0.02797 Hz`
+- hot-start minimum: `-0.02797 Hz`
+- maximum absolute difference: `9.97e-17 Hz`
+- RMS difference: `5.72e-17 Hz`
+
+This validates the current workflow end-to-end: running dispatches separately
+with disk hot starts and midpoint governor trajectories reproduces the same
+frequency trace as a continuous two-interval replay started from the same
+boundary state.
+
+## Scope of this refresh
+
+This refresh now covers both the stable ANDES/AMS migration and the boundary
+execution model used for later deadband studies:
+
+- stable `PVD1/ESD1` migration on current ANDES;
+- reusable `dispatch JSON -> TDS` and `day dispatch JSON -> hot-start chain`
+  workflows;
+- corrected AGC governor clipping;
+- realistic interval-to-interval continuity through disk checkpoints plus
+  midpoint governor target trajectories.
+
+It is the foundation for later deadband sensitivity studies, not the final word
+on deadband tuning itself.
+
+## License
+
+This subdirectory follows the license in the repository root.

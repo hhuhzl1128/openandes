@@ -15,6 +15,7 @@ It is meant to hold demos, notes, run memory, and reusable workflows built aroun
 ### Repository Structure
 - `andesnotes/`: learning outputs, distilled notes, and simulation memory files
 - `demo/`: reserved for runnable ANDES demo workflows
+- `demo/deadband/`: refreshed deadband workflow with stable-branch fixes, hot-start replay scripts, and curated validation figures
 
 ### Self-Learning and Evolution
 OpenAndes has a practical self-learning and evolution capability powered by simulation memory files (for example, `andesnotes/12_andes_simulation_memory.md`).
@@ -40,6 +41,17 @@ This enables a mobile-first control loop: request, run, debug, and receive resul
 - AMS repository: https://github.com/CURENT/ams
 - ANDES docs: https://docs.andes.app/
 - Demo repository: https://github.com/CURENT/demo
+
+### Refreshed Deadband Demo
+The `demo/deadband/` folder documents the repaired deadband workflow on the
+current ANDES/AMS stack, including:
+
+- the original demo problems,
+- the migration path to stable `PVD1/ESD1`,
+- the move from cold-stitched dispatches to disk hot-start replay,
+- the governor-target midpoint trajectory used to avoid non-physical boundary
+  shocks,
+- and representative validation results committed with the demo itself.
 
 ### Notes
 - Python environments are intentionally excluded from this repository.
